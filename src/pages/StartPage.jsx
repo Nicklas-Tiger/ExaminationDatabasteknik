@@ -3,8 +3,8 @@ import React from "react";
 const StartPage = () => {
   return (
     <>
-      <div>
-        <p>Välkommen till vårt fantastiska Project Management verktyg!</p>
+      <div className="start-page">
+        <h1>Tigers fantastiska Projekt Management Verktyg!</h1>
       </div>
     </>
   );
