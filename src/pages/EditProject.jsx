@@ -9,7 +9,7 @@ const EditProject = () => {
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const res = await fetch("http://localhost:5003/api/projects");
+        const res = await fetch("https://localhost:7097/api/projects");
         const data = await res.json();
         setProject(data);
       } catch (error) {

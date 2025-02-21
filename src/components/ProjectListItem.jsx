@@ -7,8 +7,8 @@ const ProjectListItem = ({ project }) => {
       <p>Kund: {project.customer?.customerName}</p>
       <p>Status: {project.statusName}</p>
       <p>Beskrivning: {project.description}</p>
-      <button className="primary-btn">Visa detaljer</button>
-      <button className="primary-btn">Skapa nytt projekt</button>
+      <button className="btn">Visa detaljer</button>
+      <button className="btn">Radera projekt</button>
     </div>
   );
 };

@@ -8,13 +8,12 @@ const ListProject = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Hämta alla projects från API
   const getProjects = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const res = await fetch("http://localhost:5003/api/projects");
+      const res = await fetch("https://localhost:7097/api/projects");
       if (res.ok) {
         const data = await res.json();
         setProjects(data);
@@ -30,12 +29,10 @@ const ListProject = () => {
     }
   };
 
-  // Hämta projects när komponenten laddas
   useEffect(() => {
     getProjects();
   }, []);
 
-  // Hantera när användaren vill skapa ett nytt projekt
   const handleCreate = () => {
     navigate("/projects/create");
   };
@@ -49,7 +46,7 @@ const ListProject = () => {
 
       {!loading && !error && (
         <>
-          <button className="primary-btn" onClick={handleCreate}>
+          <button className="create-project-btn btn" onClick={handleCreate}>
             Skapa nytt projekt
           </button>
           <ProjectList projects={projects} />

@@ -12,7 +12,7 @@ const ProjectForm = ({
     statusId: "",
     projectManager: "",
     service: "",
-    ...initialData, // Förifyll formuläret om initialData finns
+    ...initialData,
   });
 
   const [statuses, setStatuses] = useState([]);
@@ -20,10 +20,9 @@ const ProjectForm = ({
   const [projectManagers, setProjectManagers] = useState([]);
   const [services, setServices] = useState([]);
 
-  // Hämta customers
   const getCustomers = async () => {
     try {
-      const res = await fetch("http://localhost:5003/api/Customers");
+      const res = await fetch("https://localhost:7097/api/Customers");
       const data = await res.json();
       setCustomers(data);
     } catch (error) {
@@ -31,10 +30,9 @@ const ProjectForm = ({
     }
   };
 
-  // Hämta statuses
   const getStatuses = async () => {
     try {
-      const res = await fetch("http://localhost:5003/api/statuses");
+      const res = await fetch("https://localhost:7097/api/statuses");
       const data = await res.json();
       setStatuses(data);
     } catch (error) {
@@ -42,10 +40,9 @@ const ProjectForm = ({
     }
   };
 
-  // Hämta projectManagers
   const getProjectManagers = async () => {
     try {
-      const res = await fetch("http://localhost:5003/api/projectmanagers");
+      const res = await fetch("https://localhost:7097/api/projectmanagers");
       const data = await res.json();
       setProjectManagers(data);
     } catch (error) {
@@ -53,10 +50,9 @@ const ProjectForm = ({
     }
   };
 
-  // Hämta services
   const getServices = async () => {
     try {
-      const res = await fetch("http://localhost:5003/api/services");
+      const res = await fetch("https://localhost:7097/api/services");
       const data = await res.json();
       setServices(data);
     } catch (error) {
@@ -64,7 +60,6 @@ const ProjectForm = ({
     }
   };
 
-  // Hämta all data när komponenten laddas
   useEffect(() => {
     getCustomers();
     getStatuses();
@@ -78,7 +73,7 @@ const ProjectForm = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(project); // Använd prop-funktionen för att hantera submit
+    onSubmit(project);
   };
 
   return (
@@ -102,7 +97,7 @@ const ProjectForm = ({
         <option value="">Välj kund</option>
         {customers.map((customer) => (
           <option key={customer.id} value={customer.id}>
-            {customer.name}
+            {customer.customerName}
           </option>
         ))}
       </select>
@@ -132,7 +127,7 @@ const ProjectForm = ({
         <option value="">Välj projektansvarig</option>
         {projectManagers.map((pm) => (
           <option key={pm.id} value={pm.id}>
-            {pm.name}
+            {pm.displayName}
           </option>
         ))}
       </select>
@@ -147,7 +142,7 @@ const ProjectForm = ({
         <option value="">Välj tjänst</option>
         {services.map((service) => (
           <option key={service.id} value={service.id}>
-            {service.name}
+            {service.serviceName}
           </option>
         ))}
       </select>
@@ -160,7 +155,7 @@ const ProjectForm = ({
         required
       />
 
-      <button type="submit" className="primary-btn">
+      <button type="submit" className="btn">
         {submitButtonText}
       </button>
     </form>

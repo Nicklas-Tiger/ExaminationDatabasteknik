@@ -67,29 +67,87 @@ h1 {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 10px;
+  margin: 10px 5px;
 }
 
 .primary-btn:hover {
   background-color: darkgreen;
 }
+/* Container för hela listan */
 .project-list {
-  list-style: none;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-.project-list li {
-  padding: 10px;
-  border-bottom: 1px solid var(--border-color);
+/* Enskilda projektkort */
+.project-list-item {
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
-.project-list li strong {
-  color: var(--text-headline-color);
+.project-list-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
 }
 
-.project-list li span {
-  color: var(--text-muted-color);
+/* Textdesign */
+.project-list-item h4 {
+  color: #333;
+  font-size: 1.3em;
+  margin-bottom: 10px;
 }
+
+.project-list-item p {
+  color: #555;
+  margin: 5px 0;
+}
+
+/* Knappdesign */
+.project-list-item .btn {
+  display: inline-block;
+  background-color: #198754;
+  color: #fff;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.project-list-item .btn:hover {
+  background-color: #145f3e;
+}
+
+/* Anpassa knappen för att skapa nytt projekt */
+.create-project-btn {
+  background-color: #0d6efd;
+  border: none;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.create-project-btn:hover {
+  background-color: #0a58ca;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
 form {
   display: flex;
   flex-direction: column;
