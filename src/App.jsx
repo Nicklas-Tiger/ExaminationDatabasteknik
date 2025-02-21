@@ -7,11 +7,10 @@ import Footer from "./components/Footer";
 import ListProject from "./pages/ListProject";
 import ProjectDetails from "./pages/ProjectDetails";
 import EditProject from "./pages/EditProject";
-import ProjectForm from "./components/ProjectForm";
 
 function App() {
   return (
-    <>
+    <div className="app-grid">
       <Router>
         <header>
           <Navbar />
@@ -30,7 +29,7 @@ function App() {
           <Footer />
         </footer>
       </Router>
-    </>
+    </div>
   );
 }
 

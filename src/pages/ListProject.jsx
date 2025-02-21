@@ -1,57 +1,64 @@
 import React, { useState, useEffect } from "react";
-import ProjectList from "../components/ProjectList";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import ProjectListItem from "../components/ProjectListItem";
 
 const ListProject = () => {
   const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+  const location = useLocation();
+  const navigate = useNavigate(); // 🟢 Lägg till navigate för att navigera till skapandet
 
-  const getProjects = async () => {
-    setLoading(true);
-    setError(null);
-
+  const fetchProjects = async () => {
     try {
       const res = await fetch("https://localhost:7097/api/projects");
-      if (res.ok) {
-        const data = await res.json();
-        setProjects(data);
-      } else {
-        console.error("Failed to fetch projects:", res.status);
-        setError("Kunde inte hämta projektdata. Försök igen senare.");
-      }
+      const data = await res.json();
+      setProjects(data);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching projects:", error);
-      setError("Något gick fel. Kontrollera konsolen för mer information.");
-    } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    getProjects();
+    if (location.state?.refresh) {
+      fetchProjects();
+    }
+  }, [location.state]);
+
+  useEffect(() => {
+    fetchProjects();
   }, []);
 
-  const handleCreate = () => {
-    navigate("/projects/create");
-  };
+  if (isLoading) {
+    return <p>Laddar projekt...</p>;
+  }
+
+  if (projects.length === 0) {
+    return (
+      <div>
+        <h1>Projektlista</h1>
+        <p>Inga projekt hittades.</p>
+        <button className="btn" onClick={() => navigate("/projects/create")}>
+          Skapa nytt projekt
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="page-container">
-      <h1>Alla projekt</h1>
-
-      {loading && <p>Laddar projekt...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      {!loading && !error && (
-        <>
-          <button className="create-project-btn btn" onClick={handleCreate}>
-            Skapa nytt projekt
-          </button>
-          <ProjectList projects={projects} />
-        </>
-      )}
+      <h1>Projektlista</h1>
+      <button
+        className="btn"
+        onClick={() => navigate("/projects/create")}
+        style={{ marginBottom: "20px" }}
+      >
+        Skapa nytt projekt
+      </button>
+      {projects.map((project) => (
+        <ProjectListItem key={project.id} project={project} />
+      ))}
     </div>
   );
 };

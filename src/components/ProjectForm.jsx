@@ -6,13 +6,14 @@ const ProjectForm = ({
   submitButtonText = "Skapa projekt",
 }) => {
   const [project, setProject] = useState({
-    name: "",
+    projectName: "",
     description: "",
+    startDate: "",
+    endDate: "",
     customer: "",
     statusId: "",
     projectManager: "",
     service: "",
-    ...initialData,
   });
 
   const [statuses, setStatuses] = useState([]);
@@ -67,6 +68,25 @@ const ProjectForm = ({
     getServices();
   }, []);
 
+  // Lägg till denna kontroll för att förhindra oändliga renders
+  useEffect(() => {
+    if (initialData && Object.keys(initialData).length > 0) {
+      setProject((prevProject) => ({
+        ...prevProject,
+        projectName: initialData.projectName || "",
+        description: initialData.description || "",
+        startDate: initialData.startDate
+          ? initialData.startDate.split("T")[0]
+          : "",
+        endDate: initialData.endDate ? initialData.endDate.split("T")[0] : "",
+        customer: initialData.customer || "",
+        statusId: initialData.statusId || "",
+        projectManager: initialData.projectManager || "",
+        service: initialData.service || "",
+      }));
+    }
+  }, [initialData]); // Lägg till dependency-array med initialData
+
   const handleChange = (e) => {
     setProject({ ...project, [e.target.name]: e.target.value });
   };
@@ -81,8 +101,34 @@ const ProjectForm = ({
       <label>Projektnamn:</label>
       <input
         type="text"
-        name="name"
-        value={project.name}
+        name="projectName"
+        value={project.projectName}
+        onChange={handleChange}
+        required
+      />
+
+      <label>Beskrivning:</label>
+      <textarea
+        name="description"
+        value={project.description}
+        onChange={handleChange}
+        required
+      />
+
+      <label>Startdatum:</label>
+      <input
+        type="date"
+        name="startDate"
+        value={project.startDate}
+        onChange={handleChange}
+        required
+      />
+
+      <label>Slutdatum:</label>
+      <input
+        type="date"
+        name="endDate"
+        value={project.endDate}
         onChange={handleChange}
         required
       />
@@ -116,44 +162,6 @@ const ProjectForm = ({
           </option>
         ))}
       </select>
-
-      <label>Projektansvarig:</label>
-      <select
-        name="projectManager"
-        value={project.projectManager}
-        onChange={handleChange}
-        required
-      >
-        <option value="">Välj projektansvarig</option>
-        {projectManagers.map((pm) => (
-          <option key={pm.id} value={pm.id}>
-            {pm.displayName}
-          </option>
-        ))}
-      </select>
-
-      <label>Tjänst:</label>
-      <select
-        name="service"
-        value={project.service}
-        onChange={handleChange}
-        required
-      >
-        <option value="">Välj tjänst</option>
-        {services.map((service) => (
-          <option key={service.id} value={service.id}>
-            {service.serviceName}
-          </option>
-        ))}
-      </select>
-
-      <label>Beskrivning:</label>
-      <textarea
-        name="description"
-        value={project.description}
-        onChange={handleChange}
-        required
-      />
 
       <button type="submit" className="btn">
         {submitButtonText}
