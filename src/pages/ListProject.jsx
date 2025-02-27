@@ -6,7 +6,7 @@ const ListProject = () => {
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
-  const navigate = useNavigate(); // 🟢 Lägg till navigate för att navigera till skapandet
+  const navigate = useNavigate();
 
   const fetchProjects = async () => {
     try {
@@ -48,7 +48,7 @@ const ListProject = () => {
 
   return (
     <div className="page-container">
-      <h1>Projektlista</h1>
+      <h1>Våra Projekt</h1>
       <button
         className="btn"
         onClick={() => navigate("/projects/create")}

@@ -10,10 +10,10 @@ const ProjectForm = ({
     description: "",
     startDate: "",
     endDate: "",
-    customer: "",
-    statusId: "",
-    projectManager: "",
-    service: "",
+    customer: { id: "" },
+    status: { id: "" },
+    projectManager: { id: "" },
+    service: { id: "" },
   });
 
   const [statuses, setStatuses] = useState([]);
@@ -68,11 +68,11 @@ const ProjectForm = ({
     getServices();
   }, []);
 
-  // Lägg till denna kontroll för att förhindra oändliga renders
   useEffect(() => {
     if (initialData && Object.keys(initialData).length > 0) {
       setProject((prevProject) => ({
         ...prevProject,
+        id: initialData.id || prevProject.id,
         projectName: initialData.projectName || "",
         description: initialData.description || "",
         startDate: initialData.startDate
@@ -80,17 +80,31 @@ const ProjectForm = ({
           : "",
         endDate: initialData.endDate ? initialData.endDate.split("T")[0] : "",
         customer: initialData.customer || "",
-        statusId: initialData.statusId || "",
+        status: initialData.status || "",
         projectManager: initialData.projectManager || "",
         service: initialData.service || "",
       }));
     }
-  }, [initialData]); // Lägg till dependency-array med initialData
+  }, [initialData]);
 
   const handleChange = (e) => {
-    setProject({ ...project, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === "customer") {
+      setProject({ ...project, customer: { id: parseInt(value) } });
+    } else if (name === "status") {
+      setProject({ ...project, status: { id: parseInt(value) } });
+    } else if (name === "projectManager") {
+      setProject({ ...project, projectManager: { id: parseInt(value) } });
+    } else if (name === "service") {
+      setProject({ ...project, service: { id: parseInt(value) } });
+    } else {
+      setProject({ ...project, [name]: value });
+    }
   };
 
+  useEffect(() => {
+    getCustomers();
+  }, []);
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(project);
@@ -106,7 +120,6 @@ const ProjectForm = ({
         onChange={handleChange}
         required
       />
-
       <label>Beskrivning:</label>
       <textarea
         name="description"
@@ -114,7 +127,6 @@ const ProjectForm = ({
         onChange={handleChange}
         required
       />
-
       <label>Startdatum:</label>
       <input
         type="date"
@@ -123,7 +135,6 @@ const ProjectForm = ({
         onChange={handleChange}
         required
       />
-
       <label>Slutdatum:</label>
       <input
         type="date"
@@ -132,11 +143,10 @@ const ProjectForm = ({
         onChange={handleChange}
         required
       />
-
       <label>Kund:</label>
       <select
         name="customer"
-        value={project.customer}
+        value={project.customer.id}
         onChange={handleChange}
         required
       >
@@ -147,11 +157,10 @@ const ProjectForm = ({
           </option>
         ))}
       </select>
-
       <label>Status:</label>
       <select
-        name="statusId"
-        value={project.statusId}
+        name="status"
+        value={project.status.id}
         onChange={handleChange}
         required
       >
@@ -162,7 +171,34 @@ const ProjectForm = ({
           </option>
         ))}
       </select>
-
+      <label>Projektansvarig:</label>
+      <select
+        name="projectManager"
+        value={project.projectManager.id || ""}
+        onChange={handleChange}
+        required
+      >
+        <option value="">Välj projektledare</option>
+        {projectManagers.map((pm) => (
+          <option key={pm.id} value={pm.id}>
+            {pm.firstName} {pm.lastName}
+          </option>
+        ))}
+      </select>
+      <label>Tjänst:</label>
+      <select
+        name="service"
+        value={project.service.id || ""}
+        onChange={handleChange}
+        required
+      >
+        <option value="">Välj tjänst</option>
+        {services.map((service) => (
+          <option key={service.id} value={service.id}>
+            {service.serviceName}
+          </option>
+        ))}
+      </select>
       <button type="submit" className="btn">
         {submitButtonText}
       </button>

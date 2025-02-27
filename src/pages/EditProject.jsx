@@ -6,6 +6,7 @@ const EditProject = () => {
   const { id } = useParams();
   const [project, setProject] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -15,31 +16,49 @@ const EditProject = () => {
           throw new Error("Något gick fel vid hämtningen av projektet.");
         }
         const data = await res.json();
-        setProject(data);
-        setIsLoading(false);
+
+        const mappedData = {
+          ...data,
+          statusId: data.status?.id || null,
+          customerId: data.customer?.id || null,
+          projectManagerId: data.projectManager?.id || null,
+          serviceId: data.service?.id || null,
+        };
+
+        setProject(mappedData);
       } catch (error) {
         console.error("Error fetching project:", error);
+        setError("Kunde inte hämta projektdata.");
+      } finally {
         setIsLoading(false);
       }
     };
 
     fetchProject();
   }, [id]);
+
   const handleUpdate = async (updatedProject) => {
+    if (!updatedProject.id || updatedProject.id <= 0) {
+      console.error("Fel: Id saknas eller är ogiltigt i updatedProject.");
+      return;
+    }
+
     const payload = {
       id: updatedProject.id,
       projectName: updatedProject.projectName,
       description: updatedProject.description,
       startDate: updatedProject.startDate,
       endDate: updatedProject.endDate,
-      statusId: parseInt(updatedProject.statusId),
-      customerId: parseInt(updatedProject.customer),
+      status: updatedProject.status,
+      customer: updatedProject.customer,
+      projectManager: updatedProject.projectManager,
+      service: updatedProject.service,
     };
 
     console.log("Payload som skickas:", JSON.stringify(payload, null, 2));
 
     try {
-      const res = await fetch(`https://localhost:7097/api/projects/${id}`, {
+      const res = await fetch("https://localhost:7097/api/projects", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -57,8 +76,13 @@ const EditProject = () => {
       alert("Ett fel inträffade. Se konsolen för mer information.");
     }
   };
+
   if (isLoading) {
     return <p>Laddar projektdata...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
   }
 
   if (!project) {
@@ -69,20 +93,19 @@ const EditProject = () => {
     <div className="page-container">
       <h1>Redigera projekt</h1>
 
-      {/* Visa all information om projektet */}
       <div className="project-details">
         <h2>Projektinformation</h2>
         <p>
           <strong>Projektnamn:</strong> {project.projectName}
         </p>
         <p>
+          <strong>Beskrivning:</strong> {project.description}
+        </p>
+        <p>
           <strong>Kund:</strong> {project.customer?.customerName}
         </p>
         <p>
-          <strong>Status:</strong> {project.statusName}
-        </p>
-        <p>
-          <strong>Beskrivning:</strong> {project.description}
+          <strong>Status:</strong> {project.status?.statusName}
         </p>
         <p>
           <strong>Startdatum:</strong>{" "}
@@ -96,7 +119,7 @@ const EditProject = () => {
 
       <hr />
 
-      <h2>Redigera projekt</h2>
+      <h2 className="update-project">Redigera projekt</h2>
       <ProjectForm
         initialData={project}
         onSubmit={handleUpdate}
