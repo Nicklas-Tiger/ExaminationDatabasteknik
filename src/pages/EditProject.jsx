@@ -19,10 +19,12 @@ const EditProject = () => {
 
         const mappedData = {
           ...data,
-          statusId: data.status?.id || null,
-          customerId: data.customer?.id || null,
-          projectManagerId: data.projectManager?.id || null,
-          serviceId: data.service?.id || null,
+          customer: data.customerName,
+          description: data.description,
+          statusId: data.status?.id || 0,
+          customerId: data.customer?.id || 0,
+          projectManagerId: data.projectManager?.id || 0,
+          serviceId: data.service?.id || 0,
         };
 
         setProject(mappedData);
@@ -45,20 +47,20 @@ const EditProject = () => {
 
     const payload = {
       id: updatedProject.id,
-      projectName: updatedProject.projectName,
+      projectName: updatedProject.projectName || "",
       description: updatedProject.description,
       startDate: updatedProject.startDate,
       endDate: updatedProject.endDate,
-      status: updatedProject.status,
-      customer: updatedProject.customer,
-      projectManager: updatedProject.projectManager,
-      service: updatedProject.service,
+      customerId: updatedProject.customerId || 0,
+      statusId: updatedProject.statusId || 0,
+      projectManagerId: updatedProject.projectManagerId || 0,
+      serviceId: updatedProject.serviceId || 0,
     };
 
     console.log("Payload som skickas:", JSON.stringify(payload, null, 2));
 
     try {
-      const res = await fetch("https://localhost:7097/api/projects", {
+      const res = await fetch(`https://localhost:7097/api/projects`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

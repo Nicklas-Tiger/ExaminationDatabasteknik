@@ -73,30 +73,32 @@ const ProjectForm = ({
       setProject((prevProject) => ({
         ...prevProject,
         id: initialData.id || prevProject.id,
-        projectName: initialData.projectName || "",
+        projectName: prevProject.projectName || initialData.projectName || "",
         description: initialData.description || "",
         startDate: initialData.startDate
           ? initialData.startDate.split("T")[0]
           : "",
         endDate: initialData.endDate ? initialData.endDate.split("T")[0] : "",
-        customer: initialData.customer || "",
-        status: initialData.status || "",
-        projectManager: initialData.projectManager || "",
-        service: initialData.service || "",
+        customerId: initialData.customerId || 0,
+        statusId: initialData.statusId || 0,
+        projectManagerId: initialData.projectManagerId || 0,
+        serviceId: initialData.serviceId || 0,
       }));
     }
-  }, [initialData]);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "customer") {
-      setProject({ ...project, customer: { id: parseInt(value) } });
-    } else if (name === "status") {
-      setProject({ ...project, status: { id: parseInt(value) } });
-    } else if (name === "projectManager") {
-      setProject({ ...project, projectManager: { id: parseInt(value) } });
-    } else if (name === "service") {
-      setProject({ ...project, service: { id: parseInt(value) } });
+
+    const parsedValue = value === "" ? 0 : parseInt(value);
+
+    if (
+      name === "customerId" ||
+      name === "statusId" ||
+      name === "projectManagerId" ||
+      name === "serviceId"
+    ) {
+      setProject({ ...project, [name]: parsedValue });
     } else {
       setProject({ ...project, [name]: value });
     }
@@ -116,7 +118,7 @@ const ProjectForm = ({
       <input
         type="text"
         name="projectName"
-        value={project.projectName}
+        value={project.projectName || ""}
         onChange={handleChange}
         required
       />
@@ -145,8 +147,8 @@ const ProjectForm = ({
       />
       <label>Kund:</label>
       <select
-        name="customer"
-        value={project.customer.id}
+        name="customerId"
+        value={project.customerId || 0}
         onChange={handleChange}
         required
       >
@@ -159,8 +161,8 @@ const ProjectForm = ({
       </select>
       <label>Status:</label>
       <select
-        name="status"
-        value={project.status.id}
+        name="statusId"
+        value={project.statusId || 0}
         onChange={handleChange}
         required
       >
@@ -173,8 +175,8 @@ const ProjectForm = ({
       </select>
       <label>Projektansvarig:</label>
       <select
-        name="projectManager"
-        value={project.projectManager.id || ""}
+        name="projectManagerId"
+        value={project.projectManagerId || 0}
         onChange={handleChange}
         required
       >
@@ -187,8 +189,8 @@ const ProjectForm = ({
       </select>
       <label>Tjänst:</label>
       <select
-        name="service"
-        value={project.service.id || ""}
+        name="serviceId"
+        value={project.serviceId || 0}
         onChange={handleChange}
         required
       >
